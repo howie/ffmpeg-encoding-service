@@ -1,0 +1,55 @@
+plugins {
+    id "org.springframework.boot" version "1.5.9.RELEASE"
+    id "io.spring.dependency-management" version "1.0.4.RELEASE"
+}
+
+
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+apply plugin: 'java'
+
+//http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#build-tool-plugins-maven-packaging
+springBoot {
+    mainClass = 'tw.howie.lab.ffmpeg.server.Application'
+    executable = false
+    excludeDevtools = false
+    buildInfo()
+}
+
+// can activate spring profile using this command: gradle bootRun -Dspring.profiles.active=prod
+bootRun {
+    jvmArgs = ['-Xms1024m', '-Xmx2048m']
+    systemProperties = System.properties
+    addResources = true
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+    providedRuntime
+}
+
+ext['jetty.version'] = jetty_version
+
+dependencies {
+
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version: spring_boot_version
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: spring_boot_version
+    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: spring_boot_version
+
+    compile("io.springfox:springfox-swagger-ui:2.6.0")
+    compile("io.springfox:springfox-swagger2:2.6.0")
+
+    testCompile("junit:junit:4.12")
+    testCompile("io.rest-assured:spring-mock-mvc:3.0.0")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testCompile("org.assertj:assertj-core:3.5.2")
+}
