@@ -1,0 +1,3 @@
+rootProject.name = "ffmpeg-encoding-service"
+include 'ffmpeg-encoding-core'
+
